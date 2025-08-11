@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="12" fill="#3B82F6"/>
+  <path d="M14 42c10-8 18-14 30-18l6-2-4 6c-8 4-16 10-24 16l-8 2 0-4z" fill="white" opacity="0.9"/>
+  <path d="M12 48c14-6 26-12 40-16" stroke="white" stroke-opacity="0.7" stroke-width="2" stroke-linecap="round"/>
+  <text x="50%" y="58" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#E5F0FF">Windsurf</text>
+</svg>
