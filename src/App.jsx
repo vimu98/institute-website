@@ -24,7 +24,7 @@ import heroImg02 from './assets/hero-img-02.jpg'
 import heroImg03 from './assets/hero-img-03.jpg'
 import './App.css'
 import certificatesData from './data/certificates.json'
-import brandLogo from './assets/logo.png'
+import brandLogo from './assets/Logo.png'
 
 // Local logo assets for brands not reliably available via CDN
 import windsurfLogo from './assets/logos/windsurf.svg'
