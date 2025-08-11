@@ -1990,20 +1990,26 @@ body {
   
   /* Mobile layout improvements for Hero */
   .hero {
-    height: auto;
+    height: 100vh;
     min-height: 100vh;
-    padding: 6rem 1rem 3rem; /* account for fixed nav, add breathing room */
+    padding: 0; /* full-bleed card */
   }
 
   .hero-top-left-card {
     position: relative;
     top: 0;
     left: 0;
-    margin: 1rem auto;
-    padding: 1.25rem 1rem;
-    max-width: 640px;
+    margin: 0;
+    padding: 1rem; /* inner padding only */
+    width: 100%;
+    max-width: 100%;
     transform: none;
-    border-radius: 20px;
+    border-radius: 0; /* edge-to-edge */
+    min-height: 100vh; /* full height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.75rem;
   }
 
   /* So the decorative rain doesn't overpower content on mobile */
@@ -2089,14 +2095,20 @@ body {
   
   /* Tighter layout for very small screens */
   .hero {
-    padding: 5rem 0.75rem 2rem;
+    padding: 0;
   }
 
   .hero-top-left-card {
+    width: 100%;
     max-width: 100%;
-    margin: 0.75rem auto 1rem;
-    padding: 1rem 0.75rem;
-    border-radius: 16px;
+    margin: 0;
+    padding: 0.75rem;
+    border-radius: 0;
+    min-height: 100vh; /* full height on very small screens */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
   }
 
   .logo-drop-card {
