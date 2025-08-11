@@ -1,3 +1,179 @@
+/* --- Verify Page Styles --- */
+.verify-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px 24px; /* even tighter top space */
+  background: linear-gradient(135deg, rgba(220,38,38,0.06) 0%, rgba(37,99,235,0.06) 100%);
+}
+
+.verify-card {
+  width: 100%;
+  max-width: 640px;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  padding: 24px;
+  position: relative;
+}
+
+.verify-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.verify-path {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.verify-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.verify-status svg {
+  width: 18px;
+  height: 18px;
+}
+.verify-status.valid {
+  background: #dcfce7;
+  color: #166534;
+}
+.verify-status.invalid {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.verify-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.verify-form input[type="text"] {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+.verify-form .btn.btn-primary {
+  padding: 10px 16px;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.verify-form .btn.btn-primary:hover {
+  background: var(--primary-dark);
+}
+.back-btn {
+  padding: 8px 12px;
+}
+
+.verify-brand {
+  position: absolute;
+  top: 4px;
+  right: 26px;
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  border: 0;
+  background: transparent;
+}
+
+.verify-details {
+  margin: 12px 0 16px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 12px;
+}
+.verify-details .detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px dashed #eef2f7;
+}
+.verify-details .detail-row:last-child {
+  border-bottom: 0;
+}
+.verify-details .label {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+.verify-details .value {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* Assessments on verify page */
+.assessments {
+  margin-top: 12px;
+}
+.assessments-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 6px 0 8px;
+}
+.assessments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.assessment-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #eef2f7;
+  border-radius: 10px;
+  background: #fff;
+}
+.assessment-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.assessment-name {
+  font-weight: 600;
+}
+.assessment-link {
+  font-size: 0.9rem;
+  color: var(--accent-color);
+  text-decoration: none;
+}
+.assessment-link:hover {
+  text-decoration: underline;
+}
+.status-pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.status-pill.completed {
+  background: #dcfce7;
+  color: #166534;
+}
+.status-pill.pending {
+  background: #fee2e2;
+  color: #991b1b;
+}
 /* --- Our Vision slideshow and sizing --- */
 .about-image {
   width: 100%;
@@ -1741,6 +1917,52 @@ body {
   .hero-image {
     order: 2;
   }
+  
+  /* Mobile layout improvements for Hero */
+  .hero {
+    height: auto;
+    min-height: 100vh;
+    padding: 6rem 1rem 3rem; /* account for fixed nav, add breathing room */
+  }
+
+  .hero-top-left-card {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 1rem auto;
+    padding: 1.25rem 1rem;
+    max-width: 640px;
+    transform: none;
+    border-radius: 20px;
+  }
+
+  /* So the decorative rain doesn't overpower content on mobile */
+  .programming-logos-rain-card {
+    opacity: 0.55;
+  }
+
+  .logo-drop-card {
+    width: 32px;
+    height: 32px;
+  }
+
+  .programming-logo-card {
+    width: 32px;
+    height: 32px;
+    font-size: 9px;
+  }
+
+  .hero-logo-img {
+    max-width: 140px;
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-top-left-card .hero-subtitle {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+  }
 
   .hero-title {
     font-size: 2.5rem;
@@ -1793,6 +2015,43 @@ body {
 
   .hero-subtitle {
     font-size: 1rem;
+  }
+  
+  /* Tighter layout for very small screens */
+  .hero {
+    padding: 5rem 0.75rem 2rem;
+  }
+
+  .hero-top-left-card {
+    max-width: 100%;
+    margin: 0.75rem auto 1rem;
+    padding: 1rem 0.75rem;
+    border-radius: 16px;
+  }
+
+  .logo-drop-card {
+    width: 28px;
+    height: 28px;
+  }
+
+  .programming-logo-card {
+    width: 28px;
+    height: 28px;
+    font-size: 8px;
+  }
+
+  .hero-logo-img {
+    max-width: 110px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
   }
 
   .btn {

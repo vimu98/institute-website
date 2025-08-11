@@ -23,6 +23,8 @@ import heroImg01 from './assets/hero-img-01.jpg'
 import heroImg02 from './assets/hero-img-02.jpg'
 import heroImg03 from './assets/hero-img-03.jpg'
 import './App.css'
+import certificatesData from './data/certificates.json'
+import brandLogo from './assets/logo.png'
 
 // Local logo assets for brands not reliably available via CDN
 import windsurfLogo from './assets/logos/windsurf.svg'
@@ -43,6 +45,8 @@ function App() {
   const [currentBackgroundIndex, setCurrentBackgroundIndex] = useState(0)
   const [toast, setToast] = useState({ visible: false, text: '', variant: 'info' })
   const [aboutImageIndex, setAboutImageIndex] = useState(0)
+  // Verify route state
+  const [verifyId, setVerifyId] = useState(null)
 
   // Social media links (update these to your official pages)
   const socialLinks = {
@@ -124,6 +128,32 @@ function App() {
     heroBackground02,
     heroBackground03
   ]
+
+  // --- Verify Certificate: route parsing and navigation ---
+  const parseVerifyFromLocation = () => {
+    const path = window.location.pathname || ''
+    // Match /verify/certificate/id=XYZ
+    const m = path.match(/^\/verify\/certificate\/id=(.+)$/)
+    if (m && m[1]) return decodeURIComponent(m[1])
+    // Also accept /verify/certificate?id=XYZ
+    const params = new URLSearchParams(window.location.search)
+    const q = params.get('id')
+    return q ? decodeURIComponent(q) : null
+  }
+
+  const navigateToVerify = (id) => {
+    const target = `/verify/certificate/id=${encodeURIComponent(id.trim())}`
+    window.history.pushState({}, '', target)
+    setVerifyId(id.trim())
+  }
+
+  useEffect(() => {
+    const id = parseVerifyFromLocation()
+    setVerifyId(id)
+    const onPopState = () => setVerifyId(parseVerifyFromLocation())
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -221,6 +251,107 @@ function App() {
     }
     
   ]
+  // If on verify route, render the verification page only
+  if (verifyId !== null) {
+
+    const normalized = (verifyId || '').trim().toLowerCase()
+    const foundCert = certificatesData.find(c => (c.id || '').toLowerCase() === normalized)
+    const isValid = !!foundCert
+
+    return (
+      <div className="app">
+        <nav className="navbar">
+          <div className="nav-container">
+            <div className="nav-logo">
+              <span className="logo-text">
+                <span className="logo-innovative">
+                  <span className="logo-i-mark">
+                    <span className="i-letter" aria-label="i">i</span>
+                    <span className="i-cap" aria-hidden>
+                      <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#e11d48" d="M4 22l28-10 28 10-28 10-28-10zm6 9v10c0 6 10 11 22 11s22-5 22-11V31l-22 8-22-8z"/>
+                        <circle cx="12" cy="45" r="4" fill="#e11d48"/>
+                      </svg>
+                    </span>
+                  </span>
+                  <span className="logo-rest">nnovative</span>
+                </span>
+                <span className="logo-ict">INSTITUTE OF COMPUTING & TECHNOLOGY</span>
+              </span>
+            </div>
+          </div>
+        </nav>
+
+        <main className="verify-page">
+          <div className="verify-card">
+            <img src={brandLogo} alt="Institute Logo" className="verify-brand" />
+            <h1 className="verify-title">Certificate Verification</h1>
+
+            <div className={`verify-status ${isValid ? 'valid' : 'invalid'}`}>
+              {isValid ? (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                  Verified Certificate
+                </>
+              ) : (
+                'Invalid / Not Found'
+              )}
+            </div>
+
+            {isValid && (
+              <div className="verify-details">
+                <div className="detail-row"><span className="label">Certificate ID</span><span className="value">{foundCert.id}</span></div>
+                <div className="detail-row"><span className="label">Student Name</span><span className="value">{foundCert.studentName}</span></div>
+                <div className="detail-row"><span className="label">Course</span><span className="value">{foundCert.course}</span></div>
+                <div className="detail-row"><span className="label">Course Duration</span><span className="value">{foundCert.duration || foundCert.courseDuration || '—'}</span></div>
+                <div className="detail-row"><span className="label">Issued On</span><span className="value">{foundCert.issueDate}</span></div>
+                <div className="detail-row"><span className="label">Status</span><span className="value">{foundCert.status}</span></div>
+                {Array.isArray(foundCert.assessments) && foundCert.assessments.length > 0 && (
+                  <div className="assessments">
+                    <h3 className="assessments-title">Assessments</h3>
+                    <ul className="assessments-list">
+                      {foundCert.assessments.map((a, i) => (
+                        <li key={i} className="assessment-item">
+                          <div className="assessment-main">
+                            <span className="assessment-name">{a.name}</span>
+                            {a.link && (
+                              <a href={a.link} target="_blank" rel="noreferrer" className="assessment-link">Open</a>
+                            )}
+                          </div>
+                          <span className={`status-pill ${a.completed ? 'completed' : 'pending'}`}>
+                            {a.completed ? 'Completed' : 'Not Completed'}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <button
+              className="btn btn-outline back-btn"
+              onClick={() => { window.history.pushState({}, '', '/'); setVerifyId(null); }}
+            >
+              ← Back to Site
+            </button>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className="app">

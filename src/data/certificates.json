@@ -1,0 +1,30 @@
+[
+  {
+    "id": "JS-2025-0001",
+    "studentName": "Kalawila Pathirage Danindu Tharuka Dilshan",
+    "course": "Java SE and Spring Boot Bootcamp",
+    "duration": "4 months",
+    "issueDate": "2025-08-11",
+    "status": "Valid",
+    "certificateUrl": "#",
+    "assessments": [
+      { "name": "Java SE Project", "link": "https://github.com/BONY-SL/Point-Of-Sales-System-JAVAFX", "completed": true },
+      { "name": "Java EE Project", "link": "https://github.com/BONY-SL/Online-Event-Management-System", "completed": true },
+      { "name": "Full Stack Application", "link": "https://github.com/BONY-SL/Job-Portal-Web-Application-With-AI-Integration-", "completed": true }
+    ]
+  },
+  {
+    "id": "ICT-2025-0002",
+    "studentName": "Nimali Jayasinghe",
+    "course": "Advanced Python For AI",
+    "duration": "4 months",
+    "issueDate": "2025-08-01",
+    "status": "Valid",
+    "certificateUrl": "#",
+    "assessments": [
+      { "name": "Quizzes", "link": "#", "completed": true },
+      { "name": "Capstone (AI Model)", "link": "#", "completed": false },
+      { "name": "Viva", "link": "#", "completed": false }
+    ]
+  }
+]
