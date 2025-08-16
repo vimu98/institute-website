@@ -8,6 +8,143 @@
   background: linear-gradient(135deg, rgba(220,38,38,0.06) 0%, rgba(37,99,235,0.06) 100%);
 }
 
+/* Right-side transparent socials card */
+.hero-right-socials-card {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+}
+
+/* Hero wrapper sizing */
+.hero {
+  position: relative; /* anchor absolutely positioned children */
+  min-height: 82vh;   /* reduced further */
+}
+@media (max-width: 768px) {
+  .hero { min-height: 78vh; }
+}
+
+.hero-right-socials-card .social-btn {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  border-radius: 12px;
+  background: transparent;
+  border: 0;
+  transition: transform 180ms ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Next intake pill (top-right, near socials) */
+.hero-intake-pill {
+  position: absolute;
+  top: 1.5rem;
+  right: 5.25rem; /* leave room for socials card */
+  z-index: 4;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  line-height: 1;
+  letter-spacing: 0.2px;
+  color: #0b1220;
+  background: linear-gradient(135deg, #fef08a 0%, #facc15 100%);
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+.hero-intake-pill:hover { filter: brightness(0.98); transform: translateY(-1px); }
+.hero-intake-pill:active { transform: translateY(0); }
+
+@media (max-width: 768px) {
+  .hero-intake-pill { display: none; }
+}
+
+/* Scroll indicator bottom-center */
+.hero-scroll-indicator {
+  position: absolute;
+  left: 50%;
+  bottom: 72px; /* moved a bit up from the bottom */
+  transform: translateX(-50%);
+  z-index: 4;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+  cursor: pointer;
+  animation: heroScrollBounce 1.8s ease-in-out infinite;
+}
+.hero-scroll-indicator svg { width: 22px; height: 22px; }
+.hero-scroll-indicator:hover { transform: translateX(-50%) translateY(-2px); }
+
+@keyframes heroScrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-6px); }
+}
+
+@media (max-width: 768px) {
+  .hero-scroll-indicator { bottom: 56px; }
+}
+
+.hero-right-socials-card .social-btn:hover {
+  transform: translateY(-2px) scale(1.06);
+}
+
+/* real brand icon images */
+.hero-right-socials-card .social-btn .social-icon {
+  width: 24px;
+  height: 24px;
+  display: block;
+  object-fit: contain;
+}
+
+/* remove inner ring */
+.hero-right-socials-card .social-btn::after { content: none; }
+
+/* remove brand backgrounds; real icons provide the branding */
+.social-fb, .social-ig, .social-li, .social-yt { background: transparent; box-shadow: none; }
+
+.hero-right-socials-card .social-btn:hover.social-fb { box-shadow: 0 0 20px rgba(24,119,242,0.8); }
+.hero-right-socials-card .social-btn:hover.social-ig { box-shadow: 0 0 20px rgba(214,41,118,0.8); }
+.hero-right-socials-card .social-btn:hover.social-li { box-shadow: 0 0 20px rgba(14,118,168,0.8); }
+.hero-right-socials-card .social-btn:hover.social-yt { box-shadow: 0 0 20px rgba(255,0,0,0.8); }
+
+@media (max-width: 768px) {
+  .hero-right-socials-card {
+    top: 0.75rem;
+    right: 0.75rem;
+    gap: 8px;
+    padding: 6px;
+    border-radius: 12px;
+  }
+  .hero-right-socials-card .social-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+  .hero-right-socials-card .social-btn .social-icon { width: 22px; height: 22px; }
+}
+
 .verify-card {
   width: 100%;
   max-width: 640px;
@@ -327,6 +464,7 @@ body {
   line-height: 1.6;
   color: var(--text-primary);
   background-color: var(--bg-primary);
+  overflow-x: hidden; /* prevent tiny horizontal scroll from 100vw */
 }
 
 .app {
@@ -449,6 +587,26 @@ body {
   color: var(--text-secondary);
 }
 
+/* Mobile navigation */
+@media (max-width: 768px) {
+  .nav-container { height: 60px; }
+  .nav-toggle { display: block; }
+  .nav-menu {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1rem 1rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 999;
+  }
+  .nav-menu.active { display: flex; }
+}
+
 /* Hero Section */
 .hero {
   position: relative;
@@ -460,15 +618,50 @@ body {
   background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
 }
 
+@media (max-width: 768px) {
+  .hero { height: auto; min-height: 88vh; width: 100dvw; margin-left: calc(50% - 50dvw); margin-right: calc(50% - 50dvw); }
+  .hero-content { padding-left: 0; padding-right: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  /* Ensure card is full page width in this early block as well */
+  .hero-top-left-card { width: 100dvw; max-width: 100dvw; padding: 1rem; margin: 0; border-radius: 0; left: 50%; transform: translateX(-50%); }
+  /* Center hero content */
+  .hero-top-left-card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; text-align: center; }
+  .hero-top-left-card .hero-logo,
+  .hero-top-left-card .hero-title,
+  .hero-top-left-card .hero-subtitle,
+  .hero-top-left-card h1,
+  .hero-top-left-card h2,
+  .hero-top-left-card p { margin-left: auto; margin-right: auto; text-align: center; align-self: center; }
+  /* Explicitly center the floating code/typewriter card */
+  .hero-typewriter-line { margin-left: auto !important; margin-right: auto !important; display: inline-flex; justify-content: center; }
+  /* Ensure hero logo block is centered */
+  .hero-top-left-card .hero-logo { margin-left: auto; margin-right: auto; display: block; }
+  .hero-top-left-card .hero-logo { align-self: center !important; }
+  .hero-top-left-card .hero-title, .hero-top-left-card .hero-subtitle, .hero-top-left-card h1, .hero-top-left-card h2 { align-self: center; }
+  .hero-buttons { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; }
+  .hero-buttons a,
+  .hero-buttons button { width: min(360px, 90%); margin: 0 auto; display: inline-flex; justify-content: center; align-items: center; min-height: 48px; }
+}
+
+/* Larger phones: place buttons side-by-side but keep centered */
+@media (min-width: 480px) and (max-width: 768px) {
+  .hero-buttons { flex-direction: row; justify-content: center; align-items: stretch; gap: 0.75rem; flex-wrap: nowrap; }
+  .hero-buttons a,
+  .hero-buttons button { width: min(46%, 240px); height: 48px; display: flex; align-items: center; justify-content: center; }
+}
+
+/* Keep top-right socials visible on mobile; still hide heavy background layers */
+@media (max-width: 768px) {
+  .hero-right-socials-card { display: flex !important; }
+  .hero-background-layers { display: none !important; }
+  .hero::before, .hero::after { content: none !important; }
+}
+
 /* Programming Language Logos Rain Animation on Card */
 .programming-logos-rain-card {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0; /* fill the hero card */
   pointer-events: none;
-  z-index: 0; /* Lower z-index to be behind content */
+  z-index: 2; /* above background layers, below content */
   overflow: hidden;
   border-radius: 20px;
 }
@@ -478,7 +671,7 @@ body {
 .hero-top-left-card .hero-subtitle,
 .hero-top-left-card .hero-buttons {
   position: relative;
-  z-index: 1;
+  z-index: 3;
 }
 
 /* Improve hero subtitle visibility */
@@ -492,6 +685,158 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Prominent typewriter line as a modern translucent card */
+.hero-typewriter-line {
+  position: relative;
+  font-family: "Fira Code", "Cascadia Code", Consolas, "Courier New", ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", monospace; /* VS Code-like */
+  font-variant-ligatures: contextual common-ligatures;
+  font-feature-settings: "liga" 1, "calt" 1;
+  font-size: var(--editor-font-size); /* VS Code default size */
+  font-weight: 400; /* body text like VS Code */
+  color: #0b1220;
+  line-height: var(--editor-line-height); /* VS Code default line height */
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 38px 16px 6px 16px; /* tighter bottom spacing */
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid #e5e5e5; /* VS Code light border */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  text-shadow: none; /* ensure no glow */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove any gutter artifacts */
+.hero-typewriter-line::after { display: none; }
+
+/* Remove subtitle glow inherited on the card */
+.hero-top-left-card .hero-typewriter-line {
+  text-shadow: none !important;
+  color: #1f2937; /* slate-800 for body text */
+}
+
+/* Filename label in header */
+.hero-typewriter-line .hero-filename {
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  color: #111827;
+  font-size: 12px;
+  font-weight: 600;
+  background: #ffffff;
+  border: 1px solid #d6d6d6;
+  border-bottom-color: #ffffff; /* active tab */
+  border-radius: 6px 6px 0 0;
+  padding: 2px 10px;
+  transform: translateY(-2px);
+  user-select: none;
+}
+
+/* Copy button in header */
+.hero-typewriter-line .hero-copy-btn {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  height: 22px;
+  width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  padding: 0;
+  cursor: pointer;
+}
+.hero-typewriter-line .hero-copy-btn:hover {
+  background: rgba(15,23,42,0.06);
+}
+.hero-typewriter-line .hero-copy-btn:active {
+  transform: translateY(1px);
+}
+
+/* Editor header bar */
+.hero-typewriter-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background: #eaeaea; /* VS Code title bar */
+  border-bottom: 1px solid #d6d6d6;
+}
+
+/* Mac-like traffic light dots */
+.hero-typewriter-line::after { display: none; }
+
+/* Stronger caret and word emphasis inside the line */
+.hero-typewriter-line .hero-typewriter {
+  color: #007ACC; /* VS Code blue */
+  font-weight: 600; /* emphasize token */
+  letter-spacing: 0.1px;
+  border-right-width: 1px; /* VS Code caret */
+  border-right-color: #007ACC;
+  padding-right: 6px;
+}
+
+/* Prompt indicator before the animated text */
+.hero-typewriter-line .hero-typewriter::before {
+  content: '> ';
+  color: #94a3b8;
+}
+
+/* Muted prefix like editor plain text */
+.editor-muted {
+  color: #4b5563; /* slate-600 */
+  font-weight: 400;
+  margin-right: 6px;
+}
+
+/* Terminal-like prompt for the line */
+.hero-typewriter-line { counter-reset: line; }
+.hero-typewriter-line::marker { content: none; }
+.hero-typewriter-line { padding-left: 16px; }
+.hero-typewriter-line { text-shadow: none; }
+.hero-typewriter-line { -webkit-font-smoothing: auto; -moz-osx-font-smoothing: auto; }
+
+/* Optional subtle code background texture */
+@supports (mask-image: linear-gradient(#000, #000)) {
+  .hero-typewriter-line {
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 96%, rgba(0,0,0,0.9));
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-typewriter-line {
+    font-size: 1rem;
+    padding: 34px 12px 10px 12px;
+    border-radius: 6px;
+    width: min(340px, 65vw); /* fixed-ish width on mobile to avoid jumping */
+    max-width: 65vw;        /* safety */
+    box-sizing: border-box; /* include padding in width */
+    margin-left: auto !important;
+    margin-right: auto !important;
+    line-height: 1.35;              /* consistent line height */
+    min-height: calc(2.7em + 44px); /* 2 lines (2 * 1.35em = 2.7em) + top/bottom padding (34+10=44px) */
+    max-height: calc(2.7em + 44px);
+    overflow: hidden;               /* lock to two visible lines */
+  }
+  .hero-typewriter-line .hero-filename { font-size: 11px; }
+
+  /* Clamp animated text to two lines to match fixed height */
+  .hero-typewriter-line .hero-typewriter {
+    display: -webkit-box;
+    line-clamp: 2;            /* standard */
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
 .logo-drop-card {
   position: absolute;
   top: 0;
@@ -499,6 +844,10 @@ body {
   height: 40px;
   animation: rainDropCard linear infinite;
   animation-timing-function: linear;
+  /* Make sure elements don't flash at top-left before animation starts */
+  animation-fill-mode: both; /* apply keyframe styles before/after */
+  transform: translate3d(0, -80px, 0); /* pre-animation offscreen */
+  opacity: 0; /* fade in controlled by keyframes */
   opacity: 0.7;
   will-change: transform, opacity;
   backface-visibility: hidden;
@@ -516,10 +865,10 @@ body {
     opacity: 0;
   }
   10% {
-    opacity: 0.8;
+    opacity: 0.95;
   }
   90% {
-    opacity: 0.8;
+    opacity: 0.95;
   }
   100% {
     transform: translate3d(0, 120%, 0) rotate(180deg);
@@ -542,15 +891,15 @@ body {
 }
 
 .programming-logo-card.with-img {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 1);
 }
 
 .programming-logo-card .logo-img {
-  width: 85%;
-  height: 85%;
+  width: 92%;
+  height: 92%;
   object-fit: contain;
   display: block;
-  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.28));
 }
 
 .programming-logo-card span {
@@ -743,22 +1092,22 @@ body {
 @keyframes rainDropCard {
   0% {
     transform: translate3d(0, -60px, 0); /* start above the card */
-    opacity: 0;
+    opacity: 1; /* no fade at top */
   }
   25% {
-    transform: translate3d(calc(var(--driftA, 8px) * -1), 130px, 0);
-    opacity: 0.85;
+    transform: translate3d(calc(var(--driftA, 8px) * -1), 30vh, 0);
+    opacity: 1;
   }
   50% {
-    transform: translate3d(calc(var(--driftA, 8px)), 260px, 0);
-    opacity: 0.85;
+    transform: translate3d(calc(var(--driftA, 8px)), 60vh, 0);
+    opacity: 1;
   }
   75% {
-    transform: translate3d(calc(var(--driftA, 8px) * -0.6), 390px, 0);
-    opacity: 0.85;
+    transform: translate3d(calc(var(--driftA, 8px) * -0.6), 90vh, 0);
+    opacity: 1;
   }
   100% {
-    transform: translate3d(0, 520px, 0); /* pass the bottom edge */
+    transform: translate3d(0, 110vh, 0); /* pass the bottom edge */
     opacity: 0;
   }
 }
@@ -784,6 +1133,52 @@ body {
 .logo-drop-card-18 { left: 90%; animation-duration: 9.6s; animation-delay: 2.2s; }
 .logo-drop-card-19 { left: 12%; animation-duration: 6.6s; animation-delay: 5.2s; }
 .logo-drop-card-20 { left: 22%; animation-duration: 8.4s; animation-delay: 1.2s; }
+
+/* Desktop: fade the rain on the right edge (keeps left strong) */
+.programming-logos-rain-card {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  /* No mask by default; add on desktop below */
+  mask-image: none;
+  -webkit-mask-image: none;
+  -webkit-mask-composite: source-over; /* default composition */
+}
+
+/* Desktop: subtle right-edge fade so icons softly disappear at the boundary */
+@media (min-width: 769px) {
+  .programming-logos-rain-card {
+    mask-image: linear-gradient(to right,
+      rgba(0,0,0,1) 0%,
+      rgba(0,0,0,1) 80%,
+      rgba(0,0,0,0) 100%
+    );
+    -webkit-mask-image: linear-gradient(to right,
+      rgba(0,0,0,1) 0%,
+      rgba(0,0,0,1) 80%,
+      rgba(0,0,0,0) 100%
+    );
+  }
+}
+
+/* Mobile override: center rain card and limit width */
+@media (max-width: 768px) {
+  .programming-logos-rain-card {
+    position: fixed !important;  /* detach from card bounds */
+    top: var(--hero-top, 0) !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translateX(-50%) !important;
+    width: 100dvw !important;     /* full viewport width */
+    height: 100% !important;      /* match hero height if set; otherwise page */
+    border-radius: 0 !important;  /* no clipping on edges */
+    /* Mobile: no right fade; optional subtle bottom fade only */
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 92%, rgba(0,0,0,0) 100%) !important;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 92%, rgba(0,0,0,0) 100%) !important;
+  }
+}
 
 /* Hero Background Layers */
 .hero-background-layers {
@@ -860,58 +1255,30 @@ body {
 /* Hero Top Left Corner Card */
 .hero-top-left-card {
   position: absolute;
-  top: 4rem;
-  left: 8rem;
+  top: 0;
+  left: 0;
   z-index: 3;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 1.5rem;
   align-items: center;
   text-align: center;
-  padding: 2rem 2.5rem;
-  margin: 2rem;
-  background: 
-    conic-gradient(from 45deg at 25% 25%, 
-      rgba(139, 92, 246, 0.4) 0deg,
-      rgba(168, 85, 247, 0.35) 60deg,
-      rgba(236, 72, 153, 0.3) 120deg,
-      transparent 180deg,
-      rgba(59, 130, 246, 0.25) 240deg,
-      rgba(34, 197, 94, 0.2) 300deg,
-      rgba(139, 92, 246, 0.4) 360deg),
-    linear-gradient(135deg, 
-      rgba(139, 92, 246, 0.3) 0%, 
-      rgba(168, 85, 247, 0.25) 20%, 
-      rgba(236, 72, 153, 0.2) 40%, 
-      rgba(59, 130, 246, 0.15) 60%,
-      rgba(34, 197, 94, 0.1) 80%,
-      rgba(255, 255, 255, 0.12) 100%),
-    radial-gradient(ellipse at 80% 20%, 
-      rgba(139, 92, 246, 0.25) 0%, 
-      transparent 70%),
-    radial-gradient(ellipse at 20% 80%, 
-      rgba(236, 72, 153, 0.2) 0%, 
-      transparent 60%);
-  backdrop-filter: blur(20px) saturate(1.2);
-  border: none;
-  border-radius: 32px;
-  box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.25),
-    0 15px 30px rgba(0, 0, 0, 0.15),
-    0 5px 15px rgba(0, 0, 0, 0.1),
-    0 0 60px rgba(139, 92, 246, 0.4),
-    0 0 100px rgba(168, 85, 247, 0.25),
-    0 0 140px rgba(236, 72, 153, 0.15),
-    inset 0 3px 6px rgba(255, 255, 255, 0.25),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.1),
-    inset 2px 2px 4px rgba(255, 255, 255, 0.15),
-    inset -2px -2px 4px rgba(0, 0, 0, 0.05);
-  transform: perspective(1000px) rotateX(5deg) rotateY(-2deg);
-  max-width: 800px;
-  animation: modernCardEntrance 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  overflow: hidden;
-  position: relative;
+  padding: 1.5rem 2rem;
+  margin: 0;
+  background: transparent;
+  backdrop-filter: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+  width: 50vw;
+  max-width: none;
+  height: 100vh;
+  animation: none;
+  transition: none;
+  overflow: visible;
+  position: absolute;
 }
 
 
@@ -1032,6 +1399,31 @@ body {
   margin-bottom: 1.5rem;
   margin-top: 0.5rem;
   text-align: center;
+}
+
+/* Tagline + typewriter */
+.hero-tagline {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+}
+.hero-typewriter {
+  display: inline-block;
+  margin-left: 6px;
+  color: #fff;
+  border-right: 1px solid rgba(255, 255, 255, 0.8);
+  padding-right: 4px;
+  white-space: nowrap;
+  animation: caretBlink 1.2s steps(1) infinite;
+}
+@keyframes caretBlink {
+  0%, 100% { border-right-color: rgba(255, 255, 255, 0); }
+  50% { border-right-color: rgba(255, 255, 255, 0.8); }
+}
+
+@media (max-width: 768px) {
+  .hero-tagline { font-size: 0.9rem; }
 }
 
 .hero-logo-img {
@@ -1995,26 +2387,40 @@ body {
     padding: 0; /* full-bleed card */
   }
 
+  /* Center the inner hero wrapper so the card is centered in viewport */
+  .hero-content {
+    justify-content: center;
+    align-items: center;
+  }
+
   .hero-top-left-card {
     position: relative;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     margin: 0;
     padding: 1rem; /* inner padding only */
     width: 100%;
-    max-width: 100%;
-    transform: none;
+    max-width: 420px; /* constrain card width on mobile */
     border-radius: 0; /* edge-to-edge */
     min-height: 100vh; /* full height */
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center; /* center horizontally */
+    text-align: center;  /* center text */
     gap: 0.75rem;
+    margin-left: auto;  /* center the card */
+    margin-right: auto; /* center the card */
   }
 
   /* So the decorative rain doesn't overpower content on mobile */
   .programming-logos-rain-card {
     opacity: 0.55;
+    /* Constrain rain to the card and keep centered */
+    left: 0;
+    transform: none;
+    width: 100%;
   }
 
   .logo-drop-card {
@@ -2071,9 +2477,11 @@ body {
     font-size: 2rem;
   }
 
-  .hero-buttons {
-    justify-content: center;
-  }
+  .hero-buttons { justify-content: center; }
+
+  /* Hide right-side hero imagery on mobile to show only left side */
+  .hero-image,
+  .hero-image-container { display: none !important; }
 
   .courses-grid {
     grid-template-columns: 1fr;
@@ -2100,16 +2508,26 @@ body {
 
   .hero-top-left-card {
     width: 100%;
-    max-width: 100%;
-    margin: 0;
+    max-width: 420px; /* constrain card width on very small screens */
+    margin: 0 auto;
     padding: 0.75rem;
     border-radius: 0;
     min-height: 100vh; /* full height on very small screens */
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center; /* center horizontally */
+    text-align: center;  /* center text */
     gap: 0.5rem;
+    margin-left: auto;  /* center the card */
+    margin-right: auto; /* center the card */
   }
+
+  .hero-buttons { justify-content: center; }
+
+  /* Hide right-side hero imagery on mobile to show only left side */
+  .hero-image,
+  .hero-image-container { display: none !important; }
 
   .logo-drop-card {
     width: 28px;
@@ -2187,5 +2605,258 @@ html {
   gap: 1rem;
   flex-wrap: wrap;
   justify-content: center;
+  margin-top: 4px; /* bring buttons even closer to the typewriter card */
   animation: slideInFromBottom 1s ease-out 1s both;
+}
+
+/* Desktop: make both hero buttons exactly the same width */
+@media (min-width: 769px) {
+  .hero-buttons { flex-wrap: nowrap; }
+  .hero-buttons a,
+  .hero-buttons button {
+    width: 240px;              /* equal fixed width */
+    justify-content: center;   /* center text/icon */
+  }
+}
+
+/* =====================================
+   Tech News & Updates Section
+   ===================================== */
+.news {
+  padding: 4rem 0;
+  background: #f9fafb;
+}
+
+.news-grid {
+  display: grid;
+  /* Use fixed-width columns and center them to avoid stretched full-width cards */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 320px));
+  justify-content: center;
+  gap: 0.9rem;
+}
+
+.news-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.1);
+}
+
+.news-card .thumb {
+  position: relative;
+  display: block;
+}
+
+.news-card .thumb img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  display: block;
+}
+
+.news-card .date-badge {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  background: #10b981; /* emerald */
+  color: #fff;
+  border-radius: 10px;
+  padding: 6px 8px;
+  line-height: 1;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  box-shadow: 0 2px 8px rgba(16,185,129,0.35);
+}
+
+.news-card .date-badge strong {
+  font-size: 14px;
+}
+
+.news-card .date-badge span {
+  font-size: 11px;
+}
+
+.news-card .news-body {
+  padding: 14px 14px 16px;
+}
+
+.news-card h3 {
+  font-size: 1rem;
+  margin: 0 0 8px;
+}
+
+.news-card h3 a {
+  color: #0b1220;
+  text-decoration: underline;
+  text-decoration-color: rgba(0,0,0,0.25);
+}
+
+.news-card p {
+  color: #4b5563; /* slate-600 */
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.news-card .news-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 10px;
+}
+
+.news-card .chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  font-size: 12px;
+  border-radius: 999px;
+  background: #eef2ff; /* indigo-50 */
+  color: #3730a3; /* indigo-800 */
+  border: 1px solid #e0e7ff;
+}
+
+.news-card .read-time {
+  color: #6b7280; /* slate-500 */
+  font-size: 12px;
+}
+
+.news-card .news-ribbon {
+  position: absolute;
+  top: 10px;
+  left: -8px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  transform: rotate(-6deg);
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.news-actions {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .news {
+    padding: 3rem 0;
+  }
+  /* Make news cards use full width on small screens */
+  .news-grid {
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+    gap: 0.9rem;
+  }
+  .news-card .thumb img {
+    height: 160px;
+  }
+  /* Pagination actions: center and reduce padding */
+  .news-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .news-actions .btn {
+    padding: 0.6rem 0.9rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  /* Allow a slightly wider card on large screens without spanning full row */
+  .news-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 340px));
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .news-card .thumb img {
+    height: 130px;
+  }
+  /* Make the pagination buttons fill the row */
+  .news-actions {
+    gap: 0.5rem;
+  }
+  .news-actions .btn {
+    flex: 1 1 0;
+  }
+}
+
+/* Courses: responsive grid */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+@media (max-width: 768px) {
+  .courses-grid { grid-template-columns: 1fr; }
+  .course-card { padding: 1rem; }
+}
+
+/* Contact: two-column to single-column on mobile */
+.contact-content {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+@media (max-width: 992px) { 
+  .contact-content { 
+    grid-template-columns: 1fr; 
+    justify-items: center; 
+  } 
+}
+.contact-details { display: grid; gap: 1rem; }
+.contact-item { display: flex; gap: 12px; align-items: flex-start; }
+.contact-form .form-group input,
+.contact-form .form-group textarea {
+  width: 100%;
+}
+
+/* Footer: stack columns on small screens */
+@media (max-width: 768px){
+  .footer-content { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  .footer .social-links { justify-content: center; }
+}
+
+/* Typography adjustments */
+@media (max-width: 768px) {
+  h1 { font-size: clamp(1.6rem, 5vw, 2.1rem); line-height: 1.2; }
+  h2 { font-size: clamp(1.3rem, 4.2vw, 1.7rem); line-height: 1.25; }
+  h3 { font-size: clamp(1.05rem, 3.8vw, 1.25rem); }
+  p, li { font-size: 0.98rem; line-height: 1.6; }
+  .btn { padding: 0.55rem 0.85rem; font-size: 0.95rem; }
+}
+@media (max-width: 480px) {
+  h1 { font-size: clamp(1.4rem, 6.4vw, 1.8rem); }
+  h2 { font-size: clamp(1.15rem, 5.4vw, 1.5rem); }
+  h3 { font-size: clamp(1rem, 4.8vw, 1.15rem); }
+  p, li { font-size: 0.95rem; }
+  .btn { padding: 0.5rem 0.75rem; font-size: 0.93rem; }
+}
+
+/* Image height normalization on small screens */
+@media (max-width: 768px) {
+  .news-card .thumb img { height: 160px; object-fit: cover; }
+  .about-section .about-gallery img,
+  .about-gallery img,
+  .about-slide { max-height: 260px; object-fit: cover; width: 100%; }
+}
+@media (max-width: 480px) {
+  .news-card .thumb img { height: 140px; }
+  .about-section .about-gallery img,
+  .about-gallery img,
+  .about-slide { max-height: 220px; }
 }

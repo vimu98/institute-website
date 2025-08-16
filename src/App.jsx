@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { 
   Facebook, 
   Instagram, 
@@ -42,18 +42,180 @@ function App() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [showContactHint, setShowContactHint] = useState(false)
   const hintTimerRef = useRef(null)
-  const [currentBackgroundIndex, setCurrentBackgroundIndex] = useState(0)
+  const [currentBackgroundIndex, setCurrentBackgroundIndex] = useState(0);
+  // Typewriter headline state
+  const typeWords = useMemo(() => [
+    'Artificial Intelligence',
+    'Programming',
+    'DevOps',
+    'Frontend Technologies',
+    'Backend Technologies'
+  ], []);
+  const [wordIndex, setWordIndex] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  // Typewriter effect: ~5s per word cycle including type, pause, delete
+  useEffect(() => {
+    const current = typeWords[wordIndex % typeWords.length];
+    const isWordComplete = displayText === current;
+    const isWordEmpty = displayText === '';
+
+    // Speeds (ms)
+    const typeSpeed = 80; // typing
+    const deleteSpeed = 50; // deleting
+    const holdAfterType = 1800; // pause when full word shown
+    const holdAfterDelete = 400; // small pause after clearing
+
+    let timeout;
+    if (!isDeleting) {
+      if (!isWordComplete) {
+        timeout = setTimeout(() => {
+          setDisplayText(current.slice(0, displayText.length + 1));
+        }, typeSpeed);
+      } else {
+        timeout = setTimeout(() => setIsDeleting(true), holdAfterType);
+      }
+
+    } else {
+      if (!isWordEmpty) {
+        timeout = setTimeout(() => {
+          setDisplayText(current.slice(0, displayText.length - 1));
+        }, deleteSpeed);
+      } else {
+        timeout = setTimeout(() => {
+          setIsDeleting(false);
+          setWordIndex((prev) => (prev + 1) % typeWords.length);
+        }, holdAfterDelete);
+      }
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, wordIndex]);
+
+  
   const [toast, setToast] = useState({ visible: false, text: '', variant: 'info' })
   const [aboutImageIndex, setAboutImageIndex] = useState(0)
   // Verify route state
   const [verifyId, setVerifyId] = useState(null)
 
+  // Copy the current typewriter line to clipboard
+  const copyTypeLine = async () => {
+    try {
+      const text = `Industry‑ready skills in ${displayText}`;
+      await navigator.clipboard.writeText(text);
+      setToast({ visible: true, text: 'Copied!', variant: 'success' })
+      setTimeout(() => setToast((t) => ({ ...t, visible: false })), 1400)
+    } catch (e) {
+      setToast({ visible: true, text: 'Copy failed', variant: 'error' })
+      setTimeout(() => setToast((t) => ({ ...t, visible: false })), 1600)
+    }
+  }
+
+  // Tech News / Updates items loaded from Google Sheets CSV (no local JSON fallback)
+  const [newsItems, setNewsItems] = useState([])
+
+  // Option B: Google Sheet (Publish to web as CSV) - configure your CSV URL here
+  // 1) File -> Share -> Publish to web -> select your tab -> Format: CSV -> Publish
+  // 2) Copy the CSV URL (ends with output=csv) OR construct: 
+  //    https://docs.google.com/spreadsheets/d/18LYMuQDHgEkd2rBxNxf37a5VFWBIkxmJBB-XA2YKBFc/export?format=csv&gid=YOUR_GID
+  const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQduJCaCXnm0u87fwctCId3O_MdNrHxaYOlbIkLgwTM695nB1rVWurf2z-XYntlFcTEarDfDRaqqf9/pub?output=csv' // published CSV URL
+
+  // Minimal CSV parser supporting quoted fields and commas inside quotes
+  const parseCSV = (text) => {
+    const rows = []
+    let cur = ''
+    let inQuotes = false
+    let row = []
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i]
+      const next = text[i + 1]
+      if (c === '"') {
+        if (inQuotes && next === '"') { // escaped quote
+          cur += '"'
+          i++
+        } else {
+          inQuotes = !inQuotes
+        }
+      } else if (c === ',' && !inQuotes) {
+        row.push(cur)
+        cur = ''
+      } else if ((c === '\n' || c === '\r') && !inQuotes) {
+        if (cur !== '' || row.length) {
+          row.push(cur)
+          rows.push(row)
+          row = []
+          cur = ''
+        }
+      } else {
+        cur += c
+      }
+    }
+    if (cur !== '' || row.length) {
+      row.push(cur)
+      rows.push(row)
+    }
+    if (!rows.length) return []
+    const headers = rows[0].map(h => (h || '').trim())
+    const indexOf = (name) => headers.indexOf(name)
+    const di = {
+      id: indexOf('id'),
+      date: indexOf('date'),
+      title: indexOf('title'),
+      image: indexOf('image'),
+      link: indexOf('link'),
+      excerpt: indexOf('excerpt'),
+      category: indexOf('category'),
+      readTime: indexOf('readTime'),
+      ribbonColor: indexOf('ribbonColor'),
+      ribbonText: indexOf('ribbonText')
+    }
+    return rows.slice(1).map(r => ({
+      id: (r[di.id] || '').trim(),
+      date: (r[di.date] || '').trim(),
+      title: (r[di.title] || '').trim(),
+      image: (r[di.image] || '').trim(),
+      link: (r[di.link] || '#').trim(),
+      excerpt: (r[di.excerpt] || '').trim(),
+      category: (r[di.category] || '').trim(),
+      readTime: (r[di.readTime] || '').trim(),
+      ribbonColor: (r[di.ribbonColor] || '#10b981').trim(),
+      ribbonText: (r[di.ribbonText] || 'Events').trim()
+    })).filter(item => item.id && item.title)
+  }
+
+  useEffect(() => {
+    if (!csvUrl) return
+    let cancelled = false
+    fetch(csvUrl)
+      .then(res => res.text())
+      .then(text => {
+        if (cancelled) return
+        const items = parseCSV(text)
+        if (Array.isArray(items) && items.length) setNewsItems(items)
+      })
+      .catch(() => {/* keep fallback */})
+    return () => { cancelled = true }
+  }, [csvUrl])
+
+  // Pagination for news (6 per page)
+  const [newsPage, setNewsPage] = useState(1)
+  const NEWS_PAGE_SIZE = 6
+  const totalNewsPages = Math.max(1, Math.ceil(newsItems.length / NEWS_PAGE_SIZE))
+  const pagedNews = useMemo(() => {
+    const start = (newsPage - 1) * NEWS_PAGE_SIZE
+    return newsItems.slice(start, start + NEWS_PAGE_SIZE)
+  }, [newsItems, newsPage])
+  useEffect(() => {
+    // Reset to first page when data changes
+    setNewsPage(1)
+  }, [newsItems])
+
   // Social media links (update these to your official pages)
   const socialLinks = {
-    facebook: 'https://facebook.com/',
-    instagram: 'https://instagram.com/',
-    linkedin: 'https://www.linkedin.com/company/',
-    youtube: 'https://www.youtube.com/@'
+    facebook: 'https://facebook.com/people/Innovative-institute-of-computing-technology-iict/61565105227498/',
+    instagram: 'https://instagram.com/iictvimukthi',
+    linkedin: 'https://www.linkedin.com/company/innovative-institute-of-computing-technology/',
+    youtube: 'https://www.youtube.com/@Vimu-IICT'
   }
 
   // WhatsApp config and handler (full international format number)
@@ -203,7 +365,7 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'courses', 'contact']
+      const sections = ['home', 'about', 'courses', 'news', 'contact']
       const scrollPosition = window.scrollY + 100
 
       for (const section of sections) {
@@ -399,6 +561,13 @@ function App() {
               Courses
             </a>
             <a 
+              href="#news" 
+              className={`nav-link ${activeSection === 'news' ? 'active' : ''}`}
+              onClick={() => scrollToSection('news')}
+            >
+              Updates
+            </a>
+            <a 
               href="#contact" 
               className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`}
               onClick={() => scrollToSection('contact')}
@@ -548,7 +717,7 @@ function App() {
             })()}
 
             {/* Pass 2: Randomized fillers for density */}
-            {Array.from({ length: 60 }, (_, i) => {
+            {Array.from({ length: 36 }, (_, i) => {
               // Use Simple Icons CDN for real brand SVGs. For missing brands, fallback to text.
               const techLogos = [
                 { name: 'HTML', slug: 'html5', color: 'E34F26' },
@@ -669,9 +838,18 @@ function App() {
           <div className="hero-logo">
             <img src={instituteLogo} alt="Institute Logo" className="hero-logo-img" />
           </div>
-          <p className="hero-subtitle">
-            Welcome to our institute where learning meets excellence <br></br>{' '}
-            <span className="animated-text">{courseTitles[currentCourseIndex]}</span>
+          {/* Typewriter Headline as code editor card */}
+          <p className="hero-subtitle hero-typewriter-line" data-filename="skills.js">
+            <button className="hero-copy-btn" type="button" onClick={copyTypeLine} aria-label="Copy line">
+              {/* copy icon */}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+            </button>
+            <span className="hero-filename" aria-hidden="true">skills.js</span>
+            <span className="editor-muted">Industry‑ready skills in</span>
+            <span className="hero-typewriter">{displayText}</span>
           </p>
           <div className="hero-buttons">
             <button 
@@ -689,10 +867,35 @@ function App() {
           </div>
         </div>
 
+        {/* Right side socials (real brand icons) */}
+        <div className="hero-right-socials-card">
+          <a href={socialLinks.facebook} target="_blank" rel="noreferrer" className="social-btn" aria-label="Facebook">
+            <img className="social-icon" alt="Facebook" loading="lazy" src="https://www.vectorlogo.zone/logos/facebook/facebook-icon.svg" />
+          </a>
+          <a href={socialLinks.instagram} target="_blank" rel="noreferrer" className="social-btn" aria-label="Instagram">
+            <img className="social-icon" alt="Instagram" loading="lazy" src="https://www.vectorlogo.zone/logos/instagram/instagram-icon.svg" />
+          </a>
+          <a href={socialLinks.linkedin} target="_blank" rel="noreferrer" className="social-btn" aria-label="LinkedIn">
+            <img className="social-icon" alt="LinkedIn" loading="lazy" src="https://www.vectorlogo.zone/logos/linkedin/linkedin-icon.svg" />
+          </a>
+          <a href={socialLinks.youtube} target="_blank" rel="noreferrer" className="social-btn" aria-label="YouTube">
+            <img className="social-icon" alt="YouTube" loading="lazy" src="https://www.vectorlogo.zone/logos/youtube/youtube-icon.svg" />
+          </a>
+        </div>
+
         <div className="hero-content">
           <div className="hero-text">
           </div>
         </div>
+
+        {/* Scroll indicator (bottom-center) */}
+        <button
+          className="hero-scroll-indicator"
+          onClick={() => scrollToSection('about')}
+          aria-label="Scroll to about section"
+        >
+          <ChevronDown />
+        </button>
       </section>
 
       {/* About Section */}
@@ -793,6 +996,65 @@ function App() {
         </div>
       </section>
 
+      {/* Tech News Section */}
+      <section id="news" className="news">
+        <div className="container">
+          <div className="section-header">
+            <h2>Tech News & Updates</h2>
+            <p>Latest events, posts and announcements</p>
+          </div>
+
+          <div className="news-grid">
+            {pagedNews.map((n) => (
+              <article key={n.id} className="news-card">
+                <a href={n.link} className="thumb" aria-label={n.title}>
+                  <img src={n.image} alt={n.title} loading="lazy" />
+                  <span className="news-ribbon" style={{ background: n.ribbonColor }}>{n.ribbonText || 'Events'}</span>
+                  <span className="date-badge" aria-hidden>
+                    <strong>{n.date.split(' ')[0]}</strong>
+                    <span>{n.date.split(' ')[1]}</span>
+                  </span>
+                </a>
+                <div className="news-body">
+                  <h3>
+                    <a href={n.link}>{n.title}</a>
+                  </h3>
+                  <p>{n.excerpt}</p>
+                  <div className="news-meta">
+                    <span className="chip">{n.category}</span>
+                    <span className="read-time">{n.readTime}</span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {newsItems.length > 0 && (
+            <div className="news-actions" role="navigation" aria-label="News pagination">
+              <button
+                className="btn btn-outline"
+                type="button"
+                onClick={() => setNewsPage(p => Math.max(1, p - 1))}
+                disabled={newsPage === 1}
+                aria-label="Previous page"
+              >
+                Prev
+              </button>
+              <span style={{ margin: '0 0.75rem' }}>Page {newsPage} of {totalNewsPages}</span>
+              <button
+                className="btn btn-outline"
+                type="button"
+                onClick={() => setNewsPage(p => Math.min(totalNewsPages, p + 1))}
+                disabled={newsPage === totalNewsPages}
+                aria-label="Next page"
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section id="contact" className="contact">
         <div className="container">
@@ -829,7 +1091,7 @@ function App() {
                   </div>
                   <div>
                     <h4>Phone</h4>
-                    <p>+94 (075) 110-7119</p>
+                    <p>+94 (075) 110 7119</p>
                   </div>
                 </div>
                 
@@ -839,7 +1101,7 @@ function App() {
                   </div>
                   <div>
                     <h4>Email</h4>
-                    <p>iictcall@gmail.com</p>
+                    <p>info@iict.online</p>
                   </div>
                 </div>
               </div>
